@@ -71,8 +71,6 @@ const { actions, reducer } = createSlice({
 export function fetchOrUpdateUser(token) {
   return async (dispatch, getState) => {
     dispatch(actions.fetching());
-    console.log("cacao");
-
     // const status = selectUser(getState()).status;
     // if (status === "pending" || status === "updating") {
     //   return;
@@ -88,7 +86,6 @@ export function fetchOrUpdateUser(token) {
         },
       });
       const data = await res.json();
-      console.log(data);
       dispatch(actions.resolved(data.body));
     } catch (err) {
       dispatch(actions.rejected(err));
@@ -102,7 +99,6 @@ export function fetchOrUpdateUser(token) {
 export function updateUser(newName, token) {
   return async (dispatch, getState) => {
     dispatch(actions.fetching());
-    console.log(token);
 
     try {
       console.log(newName);
@@ -115,7 +111,6 @@ export function updateUser(newName, token) {
         body: JSON.stringify(newName),
       });
       const data = await res.json();
-      console.log(data);
       dispatch(actions.resolved(data.body));
     } catch (err) {
       console.log(err);

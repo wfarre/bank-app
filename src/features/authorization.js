@@ -68,6 +68,35 @@ const { actions, reducer } = createSlice({
         }
       },
     },
+    set: {
+      prepare: (token) => ({
+        payload: { token },
+      }),
+      reducer: (draft, action) => {
+        console.log("porut");
+        // setVoidIfUndefined(draft, action.payload.credentials);
+        // if (draft.statut === "pending" || draft.statut === "updating") {
+        draft.token = action.payload.token;
+        draft.isAuthorized = true;
+        draft.statut = "resolved";
+        return;
+        // }
+      },
+    },
+    logout: {
+      prepare: () => ({
+        payload: { initialState },
+      }),
+      reducer: (draft, action) => {
+        console.log("logout");
+        draft.token = null;
+        draft.isAuthorized = false;
+        draft.statut = "void";
+        draft.error = null;
+        return;
+        // }
+      },
+    },
   },
 });
 
@@ -93,11 +122,35 @@ export function fetchUser(credentials) {
       });
       const token = await response.json();
       dispatch(actions.resolved(credentials, token.body.token));
-      localStorage.setItem("token", token.body.token);
+      if (credentials.rememberMe) {
+        localStorage.setItem("token", token.body.token);
+      }
       // console.log(token);
     } catch (error) {
       dispatch(actions.rejected(credentials, error));
     }
+  };
+}
+
+export function setUserAuthorization() {
+  console.log("poulowkdsjadijiowej");
+  const token = localStorage.getItem("token");
+
+  if (token !== null) {
+    console.log(token);
+
+    return async (dispatch, getState) => {
+      console.log("get inside the function ");
+      dispatch(actions.set(token));
+    };
+  }
+}
+
+export function setlogout() {
+  console.log("nahhhh");
+  return async (dispatch, getState) => {
+    dispatch(actions.logout());
+    localStorage.removeItem("token");
   };
 }
 

@@ -7,22 +7,37 @@ import * as actionLogin from "../features/auth";
 import { useEffect, useState } from "react";
 // import { updateUser } from "../features/updateUser";
 import { updateUser } from "../features/userBis";
+import { setUserAuthorization, setlogout } from "../features/authorization";
+import { useNavigate } from "react-router-dom";
 
 import store from "../store";
 import { fetchOrUpdateUser } from "../features/userBis";
 
 function Profile() {
+  console.log(localStorage.getItem("token"));
+
   const dispatch = useDispatch();
   const [editIsOpen, setEditIsOpen] = useState(false);
   const [newName, setNewName] = useState({
     firstName: "",
     lastName: "",
   });
+  const [token, setToken] = useState("");
   const user = useSelector(selectUser).data;
   const userIsAuthorized = useSelector(selectUser).isAuthorized;
-  const userBis = useSelector(selectUser);
-  const token = useSelector(selectAuth).token;
-  const token2 = localStorage.getItem(token);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setToken(localStorage.getItem("token"));
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      dispatch(setUserAuthorization(token));
+      dispatch(fetchOrUpdateUser(token));
+    }
+  }, [dispatch, token]);
 
   function handleEdit() {
     setEditIsOpen(true);
@@ -34,37 +49,13 @@ function Profile() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(token);
     dispatch(updateUser(newName, token));
-    // dispatch(updateUser(newName, token));
     setEditIsOpen(false);
-    // dispatch(fetchOrUpdateUser(token2));
-
-    // dispatch(user.data);
-    // console.log(userBis);
-
-    // if (userIsAuthorized) {
-    //   async () => {
-    //     try {
-    //       const res = await fetch("http://localhost:3001/api/v1/user/profile", {
-    //         method: "PUT",
-    //         headers: {
-    //           Authorization: "Bearer" + mytoken,
-    //           accept: "application/json",
-    //         },
-    //       });
-    //       const data = await res.json();
-    //       // store.dispatch(userResolved(data.body));
-    //     } catch (err) {
-    //       console.log(err);
-    //     }
-    //   };
-    // }
   }
 
-  // useEffect(() => {
-  //   dispatch(fetchOrUpdateUser(token2));
-  // }, [setEditIsOpen]);
+  function handleLogout() {
+    dispatch(setlogout());
+  }
 
   if (userIsAuthorized) {
     return (
@@ -83,11 +74,7 @@ function Profile() {
               <i className="fa fa-user-circle"></i>
               {user.firstName}
             </a>
-            <Link
-              className="main-nav-item"
-              to={"/"}
-              onClick={dispatch(actionLogin.logout)}
-            >
+            <Link className="main-nav-item" onClick={handleLogout} to={"/"}>
               <i className="fa fa-sign-out"></i>
               Sign Out
             </Link>

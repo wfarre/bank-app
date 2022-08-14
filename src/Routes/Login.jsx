@@ -15,6 +15,7 @@ function Login() {
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
+    rememberMe: false,
   });
   // const isAuthorized = useSelector((state) => state.user.isAuthorized);
 
@@ -28,6 +29,8 @@ function Login() {
   const user = useSelector(selectUser);
 
   const auth = useSelector(selectAuth);
+
+  console.log(credentials);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -46,7 +49,7 @@ function Login() {
 
   if (user.isAuthorized) {
     const userId = selectUser(store.getState()).data.id;
-    navigate("/profile/" + userId);
+    navigate("/profile");
   }
 
   return (
@@ -81,7 +84,15 @@ function Login() {
                 // required
               />
             </div>
-            <div className="input-remember">
+            <div
+              className="input-remember"
+              onChange={() =>
+                setCredentials({
+                  ...credentials,
+                  rememberMe: !credentials.rememberMe,
+                })
+              }
+            >
               <input type="checkbox" id="remember-me" />
               <label htmlFor="remember-me">Remember me</label>
             </div>
