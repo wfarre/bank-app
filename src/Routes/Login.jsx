@@ -1,56 +1,46 @@
 import { useEffect, useState } from "react";
 import Footer from "../Components/Footer";
 import NavBar from "../Components/NavBar";
-// import { fetchOrUpdateUser } from "../features/user";
 import { fetchOrUpdateUser } from "../features/userBis";
 
-import store from "../store";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectAuth, selectIsLoggedIn, selectUser } from "../selector";
-import { fetchUser } from "../features/authorization";
+import { selectAuth } from "../selector";
+import { fetchUser, setUserAuthorization } from "../features/authorization";
 
 function Login() {
-  const [rememberMe, setRememberMe] = useState(false);
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
     rememberMe: false,
   });
-  // const isAuthorized = useSelector((state) => state.user.isAuthorized);
 
-  // const [userId, setUserId] = useState("");
-
-  const isLoggedIn = useSelector(selectIsLoggedIn);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userIsAuthorized = useSelector(selectAuth).isAuthorized;
   const token = useSelector(selectAuth).token;
-  const user = useSelector(selectUser);
-
   const auth = useSelector(selectAuth);
 
-  console.log(credentials);
+  useEffect(() => {
+    if (auth.token === null) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        dispatch(setUserAuthorization(token));
+      }
+    }
+  }, [dispatch, auth]);
 
   function handleSubmit(e) {
     e.preventDefault();
-    // fetchOrUpdateUser(store, credentials);
     dispatch(fetchUser(credentials));
-    // fetchOrUpdateUser(store, token);
   }
 
   useEffect(() => {
-    console.log("blue");
-    console.log(token);
     if (userIsAuthorized) {
       dispatch(fetchOrUpdateUser(token));
+      navigate("/profile");
     }
-  }, [token, userIsAuthorized, dispatch]);
-
-  if (user.isAuthorized) {
-    const userId = selectUser(store.getState()).data.id;
-    navigate("/profile");
-  }
+  }, [token, navigate, userIsAuthorized, dispatch]);
 
   return (
     <div>
@@ -69,7 +59,7 @@ function Login() {
                 onChange={(e) =>
                   setCredentials({ ...credentials, email: e.target.value })
                 }
-                // required
+                required
               />
             </div>
             <div className="input-wrapper">
@@ -81,7 +71,7 @@ function Login() {
                 onChange={(e) =>
                   setCredentials({ ...credentials, password: e.target.value })
                 }
-                // required
+                required
               />
             </div>
             <div
@@ -96,9 +86,6 @@ function Login() {
               <input type="checkbox" id="remember-me" />
               <label htmlFor="remember-me">Remember me</label>
             </div>
-            {/* <!-- PLACEHOLDER DUE TO STATIC SITE -->
-            <a href="./user.html" className="sign-in-button">Sign In</a> */}
-            {/* <!-- SHOULD BE THE BUTTON BELOW --> */}
             <button className="sign-in-button">Sign In</button>
           </form>
         </section>

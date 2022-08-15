@@ -2,16 +2,13 @@ import mainNavLogo from "../../src/img/argentBankLogo.png";
 import Footer from "../Components/Footer";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectAuth, selectIsLoggedIn, selectUser } from "../selector";
-import * as actionLogin from "../features/auth";
+import { selectAuth, selectUser } from "../selector";
 import { useEffect, useState } from "react";
-// import { updateUser } from "../features/updateUser";
 import { updateUser } from "../features/userBis";
 import { setUserAuthorization, setlogout } from "../features/authorization";
 import { useNavigate } from "react-router-dom";
-
-import store from "../store";
 import { fetchOrUpdateUser } from "../features/userBis";
+import NavBar from "../Components/NavBar";
 
 function Profile() {
   console.log(localStorage.getItem("token"));
@@ -22,22 +19,39 @@ function Profile() {
     firstName: "",
     lastName: "",
   });
-  const [token, setToken] = useState("");
   const user = useSelector(selectUser).data;
   const userIsAuthorized = useSelector(selectUser).isAuthorized;
+  const authToken = useSelector(selectAuth).token;
+  const auth = useSelector(selectAuth);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    setToken(localStorage.getItem("token"));
-  }, []);
+    if (auth.token === null) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        dispatch(setUserAuthorization(token));
+      }
+    }
+  }, [dispatch, auth]);
 
   useEffect(() => {
-    if (token) {
-      dispatch(setUserAuthorization(token));
-      dispatch(fetchOrUpdateUser(token));
+    if (auth.isAuthorized) {
+      dispatch(fetchOrUpdateUser(auth.token));
     }
-  }, [dispatch, token]);
+    if (!auth.isAuthorized) {
+      navigate("/login");
+    }
+  }, [auth, navigate, dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      setNewName({
+        firstName: user.firstName,
+        lastName: user.lastName,
+      });
+    }
+  }, [user]);
 
   function handleEdit() {
     setEditIsOpen(true);
@@ -49,37 +63,14 @@ function Profile() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    dispatch(updateUser(newName, token));
+    dispatch(updateUser(newName, authToken));
     setEditIsOpen(false);
-  }
-
-  function handleLogout() {
-    dispatch(setlogout());
   }
 
   if (userIsAuthorized) {
     return (
       <div>
-        <nav className="main-nav">
-          <Link className="main-nav-logo" to={"/"}>
-            <img
-              className="main-nav-logo-image"
-              src={mainNavLogo}
-              alt="Argent Bank Logo"
-            />
-            <h1 className="sr-only">Argent Bank</h1>
-          </Link>
-          <div>
-            <a className="main-nav-item" href="./user.html">
-              <i className="fa fa-user-circle"></i>
-              {user.firstName}
-            </a>
-            <Link className="main-nav-item" onClick={handleLogout} to={"/"}>
-              <i className="fa fa-sign-out"></i>
-              Sign Out
-            </Link>
-          </div>
-        </nav>
+        <NavBar user={user} />
         <main className="main bg-dark">
           <div className="header">
             {!editIsOpen ? (

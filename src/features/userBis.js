@@ -120,8 +120,8 @@ export function updateUser(newName, token) {
 }
 
 function setVoidIfUndefined(draft, token) {
-  if (draft[token] === undefined) {
-    draft[token] = { status: "void" };
+  if (draft === undefined) {
+    draft = { status: "void" };
   }
 }
 

@@ -8,14 +8,6 @@ const initialState = {
   statut: "void",
 };
 
-// configureStore({
-//     name: "auth",
-//     initialState,
-//     reducer: {
-//         fetching:
-//     }
-// })
-
 const { actions, reducer } = createSlice({
   name: "auth",
   initialState,
@@ -73,7 +65,6 @@ const { actions, reducer } = createSlice({
         payload: { token },
       }),
       reducer: (draft, action) => {
-        console.log("porut");
         // setVoidIfUndefined(draft, action.payload.credentials);
         // if (draft.statut === "pending" || draft.statut === "updating") {
         draft.token = action.payload.token;
@@ -88,7 +79,6 @@ const { actions, reducer } = createSlice({
         payload: { initialState },
       }),
       reducer: (draft, action) => {
-        console.log("logout");
         draft.token = null;
         draft.isAuthorized = false;
         draft.statut = "void";
@@ -103,9 +93,7 @@ const { actions, reducer } = createSlice({
 const { authFetching, authResolved, authRejected } = { actions };
 
 export function fetchUser(credentials) {
-  console.log("blabla");
   return async (dispatch, getState) => {
-    console.log("caca prout");
     dispatch(actions.fetching(credentials));
     const status = selectAuth(getState()).status;
     if (status === "pending" || status === "updating") {
@@ -125,7 +113,6 @@ export function fetchUser(credentials) {
       if (credentials.rememberMe) {
         localStorage.setItem("token", token.body.token);
       }
-      // console.log(token);
     } catch (error) {
       dispatch(actions.rejected(credentials, error));
     }
@@ -133,21 +120,16 @@ export function fetchUser(credentials) {
 }
 
 export function setUserAuthorization() {
-  console.log("poulowkdsjadijiowej");
   const token = localStorage.getItem("token");
 
   if (token !== null) {
-    console.log(token);
-
     return async (dispatch, getState) => {
-      console.log("get inside the function ");
       dispatch(actions.set(token));
     };
   }
 }
 
 export function setlogout() {
-  console.log("nahhhh");
   return async (dispatch, getState) => {
     dispatch(actions.logout());
     localStorage.removeItem("token");
