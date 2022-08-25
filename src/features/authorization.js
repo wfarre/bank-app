@@ -90,8 +90,6 @@ const { actions, reducer } = createSlice({
   },
 });
 
-const { authFetching, authResolved, authRejected } = { actions };
-
 export function fetchUser(credentials) {
   return async (dispatch, getState) => {
     dispatch(actions.fetching(credentials));
@@ -112,6 +110,7 @@ export function fetchUser(credentials) {
       dispatch(actions.resolved(credentials, token.body.token));
       if (credentials.rememberMe) {
         localStorage.setItem("token", token.body.token);
+        localStorage.setItem("lastLoginTime", new Date(Date.now()).getTime());
       }
     } catch (error) {
       dispatch(actions.rejected(credentials, error));

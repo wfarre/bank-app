@@ -1,8 +1,8 @@
-import mainNavLogo from "../../src/img/argentBankLogo.png";
+import mainNavLogo from "./argentBankLogo.png";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectAuth, selectIsLoggedIn, selectUser } from "../selector";
-import { setlogout } from "../features/authorization";
+import { selectAuth, selectUser } from "../../selector";
+import { setlogout } from "../../features/authorization";
 
 function NavBar() {
   const isLoggedIn = useSelector(selectAuth).isAuthorized;

@@ -75,8 +75,6 @@ export function fetchOrUpdateUser(token) {
     // if (status === "pending" || status === "updating") {
     //   return;
     // }
-    // console.log("hey");
-
     try {
       const res = await fetch("http://localhost:3001/api/v1/user/profile", {
         method: "POST",
@@ -99,7 +97,6 @@ export function fetchOrUpdateUser(token) {
 export function updateUser(newName, token) {
   return async (dispatch, getState) => {
     dispatch(actions.fetching());
-
     try {
       console.log(newName);
       const res = await fetch("http://localhost:3001/api/v1/user/profile", {

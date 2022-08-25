@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Footer from "../Components/Footer";
-import NavBar from "../Components/NavBar";
+import Footer from "../Components/Footer/Footer";
+import NavBar from "../Components/NavBar/NavBar";
 import { fetchOrUpdateUser } from "../features/userBis";
 
 import { useNavigate } from "react-router-dom";
