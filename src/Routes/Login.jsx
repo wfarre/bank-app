@@ -8,19 +8,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectAuth } from "../selector";
 import { fetchUser, setUserAuthorization } from "../features/authorization";
 
+/**
+ * Render the login page
+ * @return the login page
+ */
 function Login() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
     rememberMe: false,
   });
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const userIsAuthorized = useSelector(selectAuth).isAuthorized;
   const token = useSelector(selectAuth).token;
   const auth = useSelector(selectAuth);
 
+  /**
+   * retrieve the jwt token, if user sets the option "stay connected"
+   */
   useEffect(() => {
     if (auth.token === null) {
       const token = localStorage.getItem("token");
@@ -30,11 +38,19 @@ function Login() {
     }
   }, [dispatch, auth]);
 
+  /**
+   * give authorization to the user if data are correct.
+   * @param {*} e
+   *
+   */
   function handleSubmit(e) {
     e.preventDefault();
     dispatch(fetchUser(credentials));
   }
 
+  /**
+   * get the user's data
+   * */
   useEffect(() => {
     if (userIsAuthorized) {
       dispatch(fetchOrUpdateUser(token));

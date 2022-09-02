@@ -90,6 +90,12 @@ const { actions, reducer } = createSlice({
   },
 });
 
+/**
+ * The user enters his/her credentials and the function will return
+ * the right token. Then, it will update the reducer and set
+ * the token in the local storage.
+ * @parameters credentials(email address, password)
+ * */
 export function fetchUser(credentials) {
   return async (dispatch, getState) => {
     dispatch(actions.fetching(credentials));
@@ -118,6 +124,11 @@ export function fetchUser(credentials) {
   };
 }
 
+/**
+ * if the user decided to stay connected, the function will
+ * retrieve the jwtToken from the local storage.
+ * @returns an async function which will dispatch the token
+ */
 export function setUserAuthorization() {
   const token = localStorage.getItem("token");
 
@@ -128,6 +139,11 @@ export function setUserAuthorization() {
   }
 }
 
+/**
+ * The function will log out the user.
+ * @returns an async function which reset the authorization reducer to its initial state
+ * and remove the token from the local storage
+ */
 export function setlogout() {
   return async (dispatch, getState) => {
     dispatch(actions.logout());

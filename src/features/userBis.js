@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { selectUser } from "../selector";
 
 const initialState = {
   status: "void",
@@ -68,6 +67,12 @@ const { actions, reducer } = createSlice({
   },
 });
 
+/**
+ * The function gets all the user's data from a token.
+ * @parameters jwtToken
+ * @dispatch user's data
+ * @dispatch error if there's an error
+ */
 export function fetchOrUpdateUser(token) {
   return async (dispatch, getState) => {
     dispatch(actions.fetching());
@@ -90,10 +95,16 @@ export function fetchOrUpdateUser(token) {
 
       console.log(err);
     }
-    console.log(selectUser(getState()));
   };
 }
 
+/**
+ * The function allows to update the name of the user.
+ * @parameters userName
+ * @parameters token
+ * @dispatch the new name of the user in the database
+ * @dispatch an error, if there is any
+ */
 export function updateUser(newName, token) {
   return async (dispatch, getState) => {
     dispatch(actions.fetching());

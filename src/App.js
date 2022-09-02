@@ -12,6 +12,10 @@ import { useNavigate } from "react-router";
 import { setUserAuthorization } from "./features/authorization";
 import { fetchOrUpdateUser } from "./features/userBis";
 
+/**
+ * render the home page
+ * @return the home page
+ */
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,6 +23,9 @@ function App() {
   const token = useSelector(selectAuth).token;
   const userIsAuthorized = auth.isAuthorized;
 
+  /**
+   * if the user is connected, then he/she will be redirected to his/her profile
+   **/
   useEffect(() => {
     if (auth.token === null) {
       const token = localStorage.getItem("token");

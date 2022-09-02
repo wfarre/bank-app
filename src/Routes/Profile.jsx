@@ -10,15 +10,18 @@ import { fetchOrUpdateUser } from "../features/userBis";
 import EditForm from "../Components/pages/Profile/EditForm/EditForm";
 import TransactionSection from "../Components/pages/Profile/TransactionSection/TransactionSection";
 
+/**
+ * Render the profile page
+ * @return the profile page
+ */
 function Profile() {
-  const dispatch = useDispatch();
-
   const user = useSelector(selectUser).data;
   const userIsAuthorized = useSelector(selectUser).isAuthorized;
   const authToken = useSelector(selectAuth).token;
   const auth = useSelector(selectAuth);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const lastLoginTime = localStorage.getItem("lastLoginTime");
@@ -29,9 +32,12 @@ function Profile() {
      **/
     // const timePastSinceLastLogin = 60 * 60 * 24 * 10200;
     const timeAllowed = 60 * 60 * 24 * 1000;
-    console.log(timePastSinceLastLogin);
-    console.log(localStorage.getItem("lastLoginTime"));
 
+    /**
+     * We check if there is a token is in the local storage and if it hasn't expired.
+     * if there is a token, then the user is sent to the profile page,
+     * else he will redirected to the home page
+     */
     if (auth.token === null) {
       const token = localStorage.getItem("token");
       if (token) {
@@ -45,6 +51,11 @@ function Profile() {
     }
   }, [dispatch, auth, navigate]);
 
+  /**
+   * we checked if the use is authorized
+   * if the user is authorized, he/she will have access to his/her profile page
+   * else, he/she will be redirected to the home page
+   */
   useEffect(() => {
     if (auth.isAuthorized) {
       dispatch(fetchOrUpdateUser(auth.token));
