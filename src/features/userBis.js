@@ -69,7 +69,7 @@ const { actions, reducer } = createSlice({
 
 /**
  * The function gets all the user's data from a token.
- * @parameters jwtToken
+ * @param jwtToken
  * @dispatch user's data
  * @dispatch error if there's an error
  */
@@ -100,8 +100,8 @@ export function fetchOrUpdateUser(token) {
 
 /**
  * The function allows to update the name of the user.
- * @parameters userName
- * @parameters token
+ * @param userName
+ * @param token
  * @dispatch the new name of the user in the database
  * @dispatch an error, if there is any
  */
@@ -109,7 +109,6 @@ export function updateUser(newName, token) {
   return async (dispatch, getState) => {
     dispatch(actions.fetching());
     try {
-      console.log(newName);
       const res = await fetch("http://localhost:3001/api/v1/user/profile", {
         method: "PUT",
         headers: {

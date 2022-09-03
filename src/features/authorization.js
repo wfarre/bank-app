@@ -94,7 +94,7 @@ const { actions, reducer } = createSlice({
  * The user enters his/her credentials and the function will return
  * the right token. Then, it will update the reducer and set
  * the token in the local storage.
- * @parameters credentials(email address, password)
+ * @param credentials(email address, password)
  * */
 export function fetchUser(credentials) {
   return async (dispatch, getState) => {

@@ -1,16 +1,16 @@
-import "./App.css";
+import "../assets/App.css";
 
-import NavBar from "./Components/NavBar/NavBar";
-import Footer from "./Components/Footer/Footer";
-import Hero from "./Components/pages/Home/Hero/Hero";
-import Features from "./Components/pages/Home/Features/Features";
+import NavBar from "../Components/NavBar/NavBar";
+import Footer from "../Components/Footer/Footer";
+import Hero from "../Components/pages/Home/Hero/Hero";
+import Features from "../Components/pages/Home/Features/Features";
 
-import { selectAuth } from "./selector";
+import { selectAuth } from "../selector";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { setUserAuthorization } from "./features/authorization";
-import { fetchOrUpdateUser } from "./features/userBis";
+import { setUserAuthorization } from "../features/authorization";
+import { fetchOrUpdateUser } from "../features/userBis";
 
 /**
  * render the home page
