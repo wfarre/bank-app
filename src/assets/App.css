@@ -353,3 +353,17 @@ body {
   justify-self: end;
   grid-area: submit;
 }
+
+.error-message {
+  color: red;
+  font-size: 13px;
+  /* display: none; */
+}
+
+.icon-nav {
+  padding-right: 5px;
+}
+
+.section__content {
+  padding-bottom: 1px;
+}

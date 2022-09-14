@@ -7,8 +7,8 @@ import { useEffect } from "react";
 import { setUserAuthorization } from "../features/authorization";
 import { useNavigate } from "react-router-dom";
 import { fetchOrUpdateUser } from "../features/userBis";
-import EditForm from "../Components/pages/Profile/EditForm/EditForm";
-import TransactionSection from "../Components/pages/Profile/TransactionSection/TransactionSection";
+import EditForm from "../Components/Pages/Profile/EditForm/EditForm";
+import TransactionSection from "../Components/Pages/Profile/TransactionSection/TransactionSection";
 
 /**
  * Render the profile page

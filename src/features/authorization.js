@@ -103,24 +103,35 @@ export function fetchUser(credentials) {
     if (status === "pending" || status === "updating") {
       return;
     }
-    try {
-      const response = await fetch("http://localhost:3001/api/v1/user/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "application/json",
+    await fetch("http://localhost:3001/api/v1/user/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then((res) => res.json())
+      .then(
+        (response) => {
+          if (response.status === 200) {
+            dispatch(actions.resolved(credentials, response.body.token));
+            if (credentials.rememberMe) {
+              localStorage.setItem("token", response.body.token);
+              localStorage.setItem(
+                "lastLoginTime",
+                new Date(Date.now()).getTime()
+              );
+            }
+          }
+          if (response.status === 400) {
+            dispatch(actions.rejected(credentials, response.message));
+          }
         },
-        body: JSON.stringify(credentials),
-      });
-      const token = await response.json();
-      dispatch(actions.resolved(credentials, token.body.token));
-      if (credentials.rememberMe) {
-        localStorage.setItem("token", token.body.token);
-        localStorage.setItem("lastLoginTime", new Date(Date.now()).getTime());
-      }
-    } catch (error) {
-      dispatch(actions.rejected(credentials, error));
-    }
+        (error) => {
+          dispatch(actions.rejected(credentials, error));
+        }
+      );
   };
 }
 

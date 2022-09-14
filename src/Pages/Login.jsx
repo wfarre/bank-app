@@ -22,9 +22,16 @@ function Login() {
     rememberMe: false,
   });
 
+  const [errorMsg, setErrorMsg] = useState({
+    email: "",
+    password: "",
+    global: "",
+  });
+
   const userIsAuthorized = useSelector(selectAuth).isAuthorized;
   const token = useSelector(selectAuth).token;
   const auth = useSelector(selectAuth);
+  const authError = useSelector(selectAuth).error;
 
   /**
    * retrieve the jwt token, if user sets the option "stay connected"
@@ -32,7 +39,7 @@ function Login() {
   useEffect(() => {
     if (auth.token === null) {
       const token = localStorage.getItem("token");
-      if (token) {
+      if (token !== null) {
         dispatch(setUserAuthorization(token));
       }
     }
@@ -46,17 +53,65 @@ function Login() {
   function handleSubmit(e) {
     e.preventDefault();
     dispatch(fetchUser(credentials));
+    setErrorMsg({ email: "", password: "", global: "" });
+  }
+
+  /**
+   * set an error message if the input is not valid
+   * @params input
+   * @params type (e.g.: `email`)
+   */
+  function checkIfInputIsValid(input, type) {
+    const emailPattern =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+    if (input === "") {
+      setErrorMsg({ ...errorMsg, [type]: "Please enter your " + type + "." });
+    }
+    if (input !== "") {
+      setErrorMsg({ ...errorMsg, [type]: "" });
+      if (type === "email") {
+        if (!input.match(emailPattern)) {
+          setErrorMsg({
+            ...errorMsg,
+            [type]:
+              "Please enter a correct " + type + ". (eg: email@email.com)",
+          });
+        }
+      }
+      if (type === "password") {
+        if (!input.match(passwordPattern)) {
+          setErrorMsg({
+            ...errorMsg,
+            [type]:
+              "Please enter a correct " +
+              type +
+              ". Your password is incorrect: it should be at least 8 characters and contain at least one letter and one number)",
+          });
+        }
+      }
+    }
   }
 
   /**
    * get the user's data
    * */
   useEffect(() => {
+    console.log(token);
     if (userIsAuthorized) {
+      console.log(token);
       dispatch(fetchOrUpdateUser(token));
       navigate("/profile");
     }
-  }, [token, navigate, userIsAuthorized, dispatch]);
+    if (authError) {
+      setErrorMsg((errorMsg) => ({
+        ...errorMsg,
+        global: authError + " Please enter a valid email or password",
+      }));
+    }
+  }, [token, navigate, userIsAuthorized, dispatch, authError]);
 
   return (
     <div>
@@ -69,26 +124,34 @@ function Login() {
             <div className="input-wrapper">
               <label htmlFor="username">Username</label>
               <input
-                type="text"
+                className="input"
+                type="email"
                 id="username"
                 value={credentials.email}
                 onChange={(e) =>
                   setCredentials({ ...credentials, email: e.target.value })
                 }
-                required
+                onBlur={() => checkIfInputIsValid(credentials.email, `email`)}
               />
+
+              <span className="error-message">{errorMsg.email}</span>
             </div>
             <div className="input-wrapper">
               <label htmlFor="password">Password</label>
               <input
+                className="input"
                 type="password"
                 id="password"
                 value={credentials.password}
                 onChange={(e) =>
                   setCredentials({ ...credentials, password: e.target.value })
                 }
-                required
+                onBlur={() =>
+                  checkIfInputIsValid(credentials.password, `password`)
+                }
+                // required
               />
+              <span className="error-message">{errorMsg.password}</span>
             </div>
             <div
               className="input-remember"
@@ -103,6 +166,7 @@ function Login() {
               <label htmlFor="remember-me">Remember me</label>
             </div>
             <button className="sign-in-button">Sign In</button>
+            <span className="error-message">{errorMsg.global}</span>
           </form>
         </section>
       </main>

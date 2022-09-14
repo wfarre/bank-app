@@ -1,9 +1,7 @@
-import "../assets/App.css";
-
 import NavBar from "../Components/NavBar/NavBar";
 import Footer from "../Components/Footer/Footer";
-import Hero from "../Components/pages/Home/Hero/Hero";
-import Features from "../Components/pages/Home/Features/Features";
+import Hero from "../Components/Pages/Home/Hero/Hero";
+import Features from "../Components/Pages/Home/Features/Features";
 
 import { selectAuth } from "../selector";
 import { useSelector, useDispatch } from "react-redux";

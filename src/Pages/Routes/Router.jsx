@@ -2,6 +2,7 @@ import Home from "../Home";
 import Profile from "../Profile";
 import Login from "../Login";
 import { Route, Routes } from "react-router-dom";
+import "../../assets/App.css";
 
 const Router = () => {
   return (

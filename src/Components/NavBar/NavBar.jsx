@@ -26,18 +26,18 @@ function NavBar() {
       {isLoggedIn ? (
         <div>
           <Link className="main-nav-item" to={"./user.html"}>
-            <i className="fa fa-user-circle"></i>
+            <i className="fa fa-user-circle icon-nav"></i>
             {user?.firstName}
           </Link>
           <Link className="main-nav-item" onClick={handleLogout} to={"/"}>
-            <i className="fa fa-sign-out"></i>
+            <i className="fa fa-sign-out icon-nav"></i>
             Sign Out
           </Link>
         </div>
       ) : (
         <div>
           <Link className="main-nav-item" to={"/login"}>
-            <i className="fa fa-user-circle"></i>
+            <i className="fa fa-user-circle icon-nav"></i>
             Sign In
           </Link>
         </div>
