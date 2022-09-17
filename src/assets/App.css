@@ -19,6 +19,13 @@ body {
 
 .bg-dark {
   background-color: #12002b;
+  padding-top: 3rem;
+  padding-bottom: 212px;
+}
+
+.bg-dark--profile {
+  padding-top: 1px;
+  padding-bottom: 0;
 }
 
 .sr-only {
@@ -68,6 +75,12 @@ body {
 .main-nav-logo-image {
   max-width: 100%;
   width: 200px;
+}
+
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .hero {
@@ -170,7 +183,8 @@ body {
   background-color: white;
   width: 300px;
   margin: 0 auto;
-  margin-top: 3rem;
+  /* margin-top: 3rem; */
+  /* padding-top: 3rem; */
   padding: 2rem;
 }
 

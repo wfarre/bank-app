@@ -24,7 +24,7 @@ function NavBar() {
         <h1 className="sr-only">Argent Bank</h1>
       </Link>
       {isLoggedIn ? (
-        <div>
+        <div className="menu">
           <Link className="main-nav-item" to={"./user.html"}>
             <i className="fa fa-user-circle icon-nav"></i>
             {user?.firstName}
@@ -35,7 +35,7 @@ function NavBar() {
           </Link>
         </div>
       ) : (
-        <div>
+        <div className="menu">
           <Link className="main-nav-item" to={"/login"}>
             <i className="fa fa-user-circle icon-nav"></i>
             Sign In

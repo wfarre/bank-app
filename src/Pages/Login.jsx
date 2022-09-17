@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectAuth } from "../selector";
 import { fetchUser, setUserAuthorization } from "../features/authorization";
 
+import { checkIfInputIsValid } from "../utils/validation";
+
 /**
  * Render the login page
  * @return the login page
@@ -52,56 +54,26 @@ function Login() {
    */
   function handleSubmit(e) {
     e.preventDefault();
+    // We check if the form is well filled to avoid any injection
+    let errors = {};
+    for (const key in credentials) {
+      errors = checkIfInputIsValid(`${credentials[key]}`, key, errors);
+    }
+    // If there is at least an error, then we don't need to fetch the User with the credentials
+    if (Object.keys(errors).length !== 0) {
+      setErrorMsg(errors);
+      return;
+    }
+
     dispatch(fetchUser(credentials));
     setErrorMsg({ email: "", password: "", global: "" });
-  }
-
-  /**
-   * set an error message if the input is not valid
-   * @params input
-   * @params type (e.g.: `email`)
-   */
-  function checkIfInputIsValid(input, type) {
-    const emailPattern =
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-
-    if (input === "") {
-      setErrorMsg({ ...errorMsg, [type]: "Please enter your " + type + "." });
-    }
-    if (input !== "") {
-      setErrorMsg({ ...errorMsg, [type]: "" });
-      if (type === "email") {
-        if (!input.match(emailPattern)) {
-          setErrorMsg({
-            ...errorMsg,
-            [type]:
-              "Please enter a correct " + type + ". (eg: email@email.com)",
-          });
-        }
-      }
-      if (type === "password") {
-        if (!input.match(passwordPattern)) {
-          setErrorMsg({
-            ...errorMsg,
-            [type]:
-              "Please enter a correct " +
-              type +
-              ". Your password is incorrect: it should be at least 8 characters and contain at least one letter and one number)",
-          });
-        }
-      }
-    }
   }
 
   /**
    * get the user's data
    * */
   useEffect(() => {
-    console.log(token);
     if (userIsAuthorized) {
-      console.log(token);
       dispatch(fetchOrUpdateUser(token));
       navigate("/profile");
     }
@@ -118,7 +90,9 @@ function Login() {
       <NavBar />
       <main className="main bg-dark">
         <section className="sign-in-content">
-          <i className="fa fa-user-circle sign-in-icon"></i>
+          <div className="icon-wrapper">
+            <i className="fa fa-user-circle sign-in-icon"></i>
+          </div>
           <h1>Sign In</h1>
           <form onSubmit={handleSubmit}>
             <div className="input-wrapper">
@@ -131,7 +105,11 @@ function Login() {
                 onChange={(e) =>
                   setCredentials({ ...credentials, email: e.target.value })
                 }
-                onBlur={() => checkIfInputIsValid(credentials.email, `email`)}
+                onBlur={() =>
+                  setErrorMsg(
+                    checkIfInputIsValid(credentials.email, `email`, errorMsg)
+                  )
+                }
               />
 
               <span className="error-message">{errorMsg.email}</span>
@@ -147,9 +125,14 @@ function Login() {
                   setCredentials({ ...credentials, password: e.target.value })
                 }
                 onBlur={() =>
-                  checkIfInputIsValid(credentials.password, `password`)
+                  setErrorMsg(
+                    checkIfInputIsValid(
+                      credentials.password,
+                      `password`,
+                      errorMsg
+                    )
+                  )
                 }
-                // required
               />
               <span className="error-message">{errorMsg.password}</span>
             </div>

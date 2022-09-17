@@ -70,7 +70,7 @@ function Profile() {
     return (
       <div>
         <NavBar user={user} />
-        <main className="main bg-dark">
+        <main className="main bg-dark bg-dark--profile">
           <header className="header">
             <EditForm user={user} authToken={authToken} />
           </header>
