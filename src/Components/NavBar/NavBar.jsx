@@ -25,7 +25,7 @@ function NavBar() {
       </Link>
       {isLoggedIn ? (
         <div className="menu">
-          <Link className="main-nav-item" to={"./user.html"}>
+          <Link className="main-nav-item" to={"/profile"}>
             <i className="fa fa-user-circle icon-nav"></i>
             {user?.firstName}
           </Link>

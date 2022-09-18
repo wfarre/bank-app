@@ -36,7 +36,7 @@ function App() {
   useEffect(() => {
     if (userIsAuthorized) {
       dispatch(fetchOrUpdateUser(token));
-      navigate("/profile");
+      // navigate("/profile");
     }
   }, [token, navigate, userIsAuthorized, dispatch]);
 
