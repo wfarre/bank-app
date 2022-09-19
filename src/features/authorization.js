@@ -65,13 +65,10 @@ const { actions, reducer } = createSlice({
         payload: { token },
       }),
       reducer: (draft, action) => {
-        // setVoidIfUndefined(draft, action.payload.credentials);
-        // if (draft.statut === "pending" || draft.statut === "updating") {
         draft.token = action.payload.token;
         draft.isAuthorized = true;
         draft.statut = "resolved";
         return;
-        // }
       },
     },
     logout: {

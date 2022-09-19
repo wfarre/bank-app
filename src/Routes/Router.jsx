@@ -1,8 +1,8 @@
-import Home from "../Home";
-import Profile from "../Profile";
-import Login from "../Login";
+import Home from "../Pages/Home";
+import Profile from "../Pages/Profile";
+import Login from "../Pages/Login";
 import { Route, Routes } from "react-router-dom";
-import "../../assets/App.css";
+import "../assets/App.css";
 
 const Router = () => {
   return (

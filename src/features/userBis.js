@@ -76,10 +76,6 @@ const { actions, reducer } = createSlice({
 export function fetchOrUpdateUser(token) {
   return async (dispatch, getState) => {
     dispatch(actions.fetching());
-    // const status = selectUser(getState()).status;
-    // if (status === "pending" || status === "updating") {
-    //   return;
-    // }
     try {
       const res = await fetch("http://localhost:3001/api/v1/user/profile", {
         method: "POST",
@@ -92,7 +88,6 @@ export function fetchOrUpdateUser(token) {
       dispatch(actions.resolved(data.body));
     } catch (err) {
       dispatch(actions.rejected(err));
-
       console.log(err);
     }
   };
